@@ -40,6 +40,7 @@ This project simulates a real-world Security Operations Center (SOC) workflow by
 5. The enriched data is passed to Groq (Llama 3.3-70b), which acts as a Tier 1 SOC Analyst and generates a structured incident report.
 6. The report is posted to a Slack `#soc-alerts` channel.
 
+![incident report](screenshots/06-slack-alert-output.png)
 
 ---
 
