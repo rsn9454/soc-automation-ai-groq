@@ -622,12 +622,12 @@ soc-automation-ai-groq/
 
 | Image | Details |
 |---|---|
-| [Splunk Events](01-splunk-events.png) | Search results showing 5x Event ID 4625 in the `soc-automation` index |
-| [Splunk Alert Config](02-splunk-alert-config.png) | The alert settings page showing cron schedule and webhook URL |
-| [n8n Workflow](03-n8n-workflow.png) | The full workflow canvas: Webhook → AbuseIPDB → Groq → Slack |
-| [AbuseIPDB Node Config](04-abuseipdb-node-config.png) | The AbuseIPDB HTTP Request node showing headers and query parameters |
-| [Groq Node Config](05-groq-node-config.png) | The Groq HTTP Request node showing the URL, auth header, and JSON body |
-| [Slack Alert Output](06-slack-alert-output.png) | The final AI-generated incident report in the Slack #soc-alerts channel |
+| [Splunk Events](screenshots/01-splunk-events.png) | Search results showing 5x Event ID 4625 in the `soc-automation` index |
+| [Splunk Alert Config](screenshots/02-splunk-alert-config.png) | The alert settings page showing cron schedule and webhook URL |
+| [n8n Workflow](screenshots/03-n8n-workflow.png) | The full workflow canvas: Webhook → AbuseIPDB → Groq → Slack |
+| [AbuseIPDB Node Config](screenshots/04-abuseipdb-node-config.png) | The AbuseIPDB HTTP Request node showing headers and query parameters |
+| [Groq Node Config](screenshots/05-groq-node-config.png) | The Groq HTTP Request node showing the URL, auth header, and JSON body |
+| [Slack Alert Output](screenshots/06-slack-alert-output.png) | The final AI-generated incident report in the Slack #soc-alerts channel |
 
 ---
 
