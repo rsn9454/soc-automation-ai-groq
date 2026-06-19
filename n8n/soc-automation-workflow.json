@@ -1,0 +1,195 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "563c1829-639c-4314-bb1c-698910b8198d",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b0d3ea51-7b5b-4df7-aaad-81155a63057f",
+      "name": "Webhook",
+      "webhookId": "563c1829-639c-4314-bb1c-698910b8198d"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "name",
+          "value": "#soc-alerts"
+        },
+        "text": "={{ $json.choices[0].message.content }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.5,
+      "position": [
+        768,
+        0
+      ],
+      "id": "2110a918-330b-47ee-ac2f-afbd76f13261",
+      "name": "Send a message",
+      "webhookId": "1d95678a-af33-4fdf-ac0c-e62e596ed314",
+      "credentials": {
+        "slackApi": {
+          "id": "I80Qo6wUxRThupbJ",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.abuseipdb.com/api/v2/check",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "ipAddress",
+              "value": "=147.185.132.198"
+            },
+            {
+              "name": "maxAgeInDays",
+              "value": "1"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        256,
+        0
+      ],
+      "id": "d9556e34-cdf6-4222-a03f-8853281bf48f",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "KWKcp7Z8SMOXVR0L",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"llama-3.3-70b-versatile\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Act as a Tier 1 SOC Analyst. When provided with a security alert or incident details (including IOCs, logs, or metadata), perform the following steps: 1. Summarize the alert - Provide a clear summary of what triggered the alert, which systems/user are affected, and the nature of the activity (e.g., suspicious login, malware detection, lateral movement). 2. Enrich with threat intelligence - Correlate any IOCs (IPs, domains, hashes) with known threat intel sources. Highlight if the indicators are associated with known malware or threat actors. 3. Assess severity - Based on MITRE ATT&CK mapping, identify tactics/techniques, and provide an initial severity rating (Low, Medium, High, Critical). 4. Recommend next actions - Suggest investigation steps and potential containment actions.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Alert Name: {{ $('Webhook').item.json.body.search_name }}\\n\\nAlert Details: Host is {{ $('Webhook').item.json.body.result.ComputerName }}, User is {{ $('Webhook').item.json.body.result.user }}, Source IP is {{ $json.data.ipAddress }}, Count is {{ $('Webhook').item.json.body.result.count }}\\n\\n\\nAbuseIPDB Enrichment for {{ $json.data.ipAddress }}:\\n- Abuse Confidence Score: {{ $json.data.abuseConfidenceScore }}%\\n- Country: {{ $json.data.countryCode }}\\n- ISP: {{ $json.data.isp }}\\n- Total Reports: {{ $json.data.totalReports }}\\n\\nGenerate a full incident report.\"\n    }\n  ],\n  \"temperature\": 0.3,\n  \"max_tokens\": 1024\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        496,
+        0
+      ],
+      "id": "dc388698-0b7d-4a2c-9e89-866c24938823",
+      "name": "HTTP Request1",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "S8Zr9Bx0G9S5Qoz6",
+          "name": "Header Auth account 3"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "accept-encoding": "identity",
+            "content-length": "411",
+            "host": "192.168.88.139:5678",
+            "content-type": "application/json",
+            "user-agent": "Splunk/C569EDF4-472D-4561-B56B-93E4FF4113EC",
+            "connection": "close"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "sid": "scheduler__splunk__search__RMD5e712daa82dd1daf3_at_1781769180_6",
+            "search_name": "brute--force-detection",
+            "app": "search",
+            "owner": "splunk",
+            "results_link": "http://TheRSNSystem:8000/app/search/@go?sid=scheduler__splunk__search__RMD5e712daa82dd1daf3_at_1781769180_6",
+            "result": {
+              "_time": "1781768616.033",
+              "ComputerName": "DESKTOP-GR5F8HV",
+              "user": "labuser",
+              "src_ip": "192.168.88.1",
+              "count": "1"
+            }
+          },
+          "webhookUrl": "http://192.168.88.139:5678/webhook-test/563c1829-639c-4314-bb1c-698910b8198d",
+          "executionMode": "test"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "125d59ea-3c05-4cb3-a09d-3167fbc317be",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "fc4c1686afda50dc633e68a3aaa19861603e844117c6cad7f3bc190155d8990b"
+  },
+  "nodeGroups": [],
+  "id": "jcxnzDGgibprvJ6t",
+  "tags": []
+}
