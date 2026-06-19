@@ -1,0 +1,19 @@
+# Secrets - NEVER commit these
+.env
+*.key
+secrets/
+credentials/
+
+# n8n exports with embedded credentials
+n8n/*credentials*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Logs
+*.log
